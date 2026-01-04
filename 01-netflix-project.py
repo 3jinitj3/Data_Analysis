@@ -1,4 +1,3 @@
-# Start coding here! Use as many cells as you like
 #Importing pandas, matplotlib, and Numpy
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -9,8 +8,7 @@ netflix_df = pd.read_csv("netflix_data.csv")
 
 # Create subset of DataFrame using the "type" column to filter movies from shows, released between 1990 & 1999
 netflix_df = pd.DataFrame(netflix_df)
-movies_filter_sr = netflix_df.loc[:,"type"] == "Movie" 
-#_sr stands for series
+movies_filter_sr = netflix_df.loc[:,"type"] == "Movie"      #_sr stands for series
 
 movies_filter_df = netflix_df[movies_filter_sr]        
 #_df stands for datafram
@@ -21,6 +19,9 @@ step_one = movies_filter_df[movies_filter_rlyr]
 
 # Filter the most frequent movie duration
 plt.hist(step_one["duration"], bins=10)
+plt.xlabel("Movie Duration (Minutes)")
+plt.ylabel("Number of Movies")
+plt.title("Movie Duration Distribution")
 plt.show()
 duration = 105
 

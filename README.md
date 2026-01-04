@@ -1,0 +1,3 @@
+This is a data analysis project to practice filtering a dataset and looking for useful decision making informantion. You can see by viewing the histogram distribution provided, that out of the total number of movies released in the 1990s, the vast majority of them had durations of less the 125 minutes, with the bulk of movies during this time span having a duration between 80 and 125 minutes.  
+
+While simple at first we can dig further into the genres and see what genre holds the biggest share of those movies, followed by directors (if a directors has multiple movies within that group) and repeating cast members to gain an idea of what type movie to produce, who should be our target director and a list of potential actor/actresses to cast for the roles.
