@@ -2,54 +2,64 @@
 import pandas as pd
 import seaborn as sns
 import numpy as np
-import matplotlib.pyplot as plt
 
-# import csv file and store as a dataframe
-prize_data = pd.read_csv("nobel.csv")
+# Import csv and transform to dataframe using pandas
+nobel_df = pd.read_csv("data/nobel.csv")
 
-# Filter both columns to find the top gender and top country by occurrence
-top_gender = prize_data["sex"].value_counts().index[0]
-top_country = prize_data["birth_country"].value_counts().index[0]
+# Look at df columns and datatypes
+print(nobel_df.info())
 
-# Print top gender and top country
-print("\nThe gender with the most Nobel laureates is: ", top_gender)
-print("The most common birth country of Nobel laureates is: ", top_country)
+# Subset the df to reveal the most commonly awarded gender and birth country
+top_gender = nobel_df["sex"].value_counts().index[0]
+top_country = nobel_df["birth_country"].value_counts().index[0]
+print(f"The most commonly awarded gender is {top_gender}, and the top country is {top_country}.")
 
-# Which decade has the highest ratio of US-born Nobel Prize winners to total winners in all categorie
-prize_data["us_born_winners"] = prize_data["birth_country"] == "United States of America"
-prize_data["decade"] = np.floor(prize_data["year"] / 10)
-prize_data["decade"] = prize_data["decade"] * 10
-prize_data["decade"] = prize_data["decade"].astype(int)
-prize_data_decade = prize_data.groupby("decade", as_index=False)["us_born_winners"].mean()
-max_ratio = prize_data_decade["us_born_winners"].max()
-max_decade_usa = prize_data_decade.loc[prize_data_decade["us_born_winners"].eq(max_ratio), "decade"].values[0]
+# Create flag column for winners whose birth country is US
+nobel_df["us_winner"] = nobel_df["birth_country"] == "United States of America"
+print(nobel_df["us_winner"])
 
-# Plot  US Prize Winner data
-sns.set_theme(style="whitegrid")
-md_plot = sns.relplot(x="decade", y="us_born_winners", data=prize_data_decade, kind="line")
-md_plot.figure.suptitle("US Ratio of Prize Winners by Decade")
+# Create decade column from year column
+nobel_df["decade"] = (np.floor(nobel_df["year"] / 10) * 10).astype(int)
 
-# Which decade has the highest proportion of female laureates
-prize_data["female_laureate"] = prize_data["sex"] == "Female"
-female_winners_prop = prize_data.groupby(["decade", "category"], as_index=False)["female_laureate"].mean()
-max_female_decade_category = female_winners_prop[female_winners_prop["female_laureate"] == female_winners_prop["female_laureate"].max()][["decade", "category"]]
-max_female_dict = {max_female_decade_category["decade"].values[0]: max_female_decade_category["category"].values[0]}
+# Get the ratio by grouping by decade column and getting the mean of the us_winner column
+prop_us_win = nobel_df.groupby("decade", as_index=False)["us_winner"].mean()
 
-# Plot Female Winners by Category data
-sns.set_theme(style="whitegrid")
-female_plot = sns.relplot(x="decade", y="female_laureate", hue="category", data=female_winners_prop, kind="line")
-female_plot.figure.suptitle("Female Winners By Category")
+# Selecting the decade with the highest proportion of US winners
+max_decade_usa = prop_us_win[prop_us_win["us_winner"] == prop_us_win["us_winner"].max()]["decade"].iloc[0]
 
-# Get the first woman to win the Nobel Prize and Category
-female_winners = prize_data[prize_data["female_laureate"]]
-min_date = female_winners[female_winners["year"] == female_winners["year"].min()]
-first_woman_name = min_date["full_name"].values[0]
-first_woman_category = min_date["category"].values[0]
-print(f"\nThe first woman to win a Nobel Prize was {first_woman_name}, in the category of {first_woman_category}.")
+# Create a relational plot to show the proportional trend of us winners by decade
+sns.set_style("whitegrid")
+j = sns.relplot(x="decade", y="us_winner", data=prop_us_win, kind="line", markers=True)
+j.figure.suptitle("US Winners by Decade")
 
-# Create a list of Winners who have won the award multiple times
-counts = prize_data["full_name"].value_counts()
+# Filter for female winners
+nobel_df["female_winner"] = nobel_df["sex"] == "Female"
+
+# Group by decade and category and isolate the female_winner column, and take the mean()
+prop_female_win = nobel_df.groupby(["decade", "category"], as_index=False)["female_winner"].mean()
+
+# Filter for decade and category with the highest female winners
+max_female_dec_cat = prop_female_win[prop_female_win["female_winner"] == prop_female_win["female_winner"].max()][["decade", "category"]].sort_values()
+print(max_female_dec_cat)
+
+# Create dictionary where decade is the key and category is the value.
+max_female_dict = {prop_female_win["decade"].iloc[0]: prop_female_win["category"].iloc[0]}
+
+# Create relational line plot with multiple categories
+sns.set_style("whitegrid")
+f = sns.relplot(x="decade", y="female_winner", data=prop_female_win, kind="line", hue="category")
+f.figure.suptitle("Female Winners per Decade by Categories")
+
+# Filter dataframe for first woman to win the Nobel Prize and in what category.
+nobel_women = nobel_df[nobel_df["female_winner"]]
+min_row = nobel_women[nobel_women["year"] == nobel_women["year"].min()]
+first_woman_name = min_row["full_name"].iloc[0]
+first_woman_category = min_row["category"].iloc[0]
+print(f"The first woman to win the Nobel Prize was {first_woman_name}, in the field of {first_woman_category}.")
+
+# Select the laureate that have received 2 or more prizes
+counts = nobel_df["full_name"].value_counts()
 repeats = counts[counts >= 2].index
 repeat_list = list(repeats)
 
-print("\nThe repeat winners are :", repeat_list)
+print("\nThe repeat winners are: ", repeat_list)
