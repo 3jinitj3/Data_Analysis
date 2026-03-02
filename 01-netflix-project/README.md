@@ -1,3 +1,35 @@
-This is a data analysis project to practice filtering a dataset and looking for useful decision making informantion. You can see by viewing the histogram distribution provided, that out of the total number of movies released in the 1990s, the vast majority of them had durations of less the 125 minutes, with the bulk of movies during this time span having a duration between 80 and 125 minutes.  
+# 🎬 Netflix Movie Analysis — 1990s Duration & Genre Trends
 
-While simple at first we can dig further into the genres and see what genre holds the biggest share of those movies, followed by directors (if a directors has multiple movies within that group) and repeating cast members to gain an idea of what type movie to produce, who should be our target director and a list of potential actor/actresses to cast for the roles.
+Analyze Netflix titles to understand **duration patterns** for movies released in the **1990s** and quantify how many **Action** films are **short (< 90 min)**.  
+This project demonstrates practical **data wrangling with pandas/NumPy** and **visual storytelling with Matplotlib**.
+
+---
+
+## 🧰 Tech Stack
+- **Python**: pandas, NumPy, Matplotlib
+- **Environment**: Jupyter/VS Code (or plain Python)
+- **Version Control**: Git/GitHub
+
+---
+
+## 📂 Dataset
+- **File**: `netflix_data.csv`  
+- **Columns used**:
+  - `type` — content type (`Movie`, `TV Show`)
+  - `release_year` — year released (int)
+  - `duration` — runtime in minutes (int)
+  - `genre` — primary genre (str)
+
+> Place `netflix_data.csv` in the same folder as the script.
+
+---
+
+## 🧠 What This Project Does
+1. **Filters dataset to 1990–1999 movies**  
+   - Boolean masks + `np.logical_and` for vectorized filtering
+2. **Plots runtime distribution**  
+   - Histogram of `duration` with labeled axes/titles
+3. **Segments Action genre and counts “short” movies**  
+   - Logic to quantify how many Action films are under 90 minutes
+
+-
