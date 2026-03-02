@@ -31,5 +31,3 @@ This project demonstrates practical **data wrangling with pandas/NumPy** and **v
    - Histogram of `duration` with labeled axes/titles
 3. **Segments Action genre and counts “short” movies**  
    - Logic to quantify how many Action films are under 90 minutes
-
--
